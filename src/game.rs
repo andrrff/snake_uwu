@@ -134,9 +134,11 @@ impl Game {
     fn update_snake(&mut self, dir: Option<Direction>) {
         if self.check_if_snake_alive(dir) {
             self.snake.move_forward(dir);
+            println!("snake {:?} :: fruit ({}:{})", self.snake.head_position(), self.food_x, self.food_y);
             self.check_eating();
         } else {
             self.game_over = true;
+            println!("Game over");
         }
         self.waiting_time = 0.0;
     }
@@ -148,5 +150,6 @@ impl Game {
         self.food_x = 6;
         self.food_y = 4;
         self.game_over = false;
+        println!("Restarted");
     }
 }

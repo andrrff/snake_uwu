@@ -28,6 +28,7 @@ fn main() {
     while let Some(event) = window.next() {
         if let Some(Button::Keyboard(key)) = event.press_args() {
             game.key_pressed(key);
+            println!("{:?}", Button::Keyboard(key));
         }
         window.draw_2d(&event, |c, g, _| {
             clear(BACK_COLOR, g);
