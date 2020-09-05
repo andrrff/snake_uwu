@@ -35,13 +35,13 @@ impl Game
         Game
         {
             snake: Snake::new(2, 2),
-            waiting_time: 0.0,
             food_exists: true,
             food_x: 6,
             food_y: 4,
             width,
             height,
-            game_over: false
+            game_over: false,
+            waiting_time: 0.0
         }
     }
 
@@ -68,7 +68,7 @@ impl Game
 
         self.update_snake(dir);
     }
-    
+
     pub fn draw(&self, con: &Context, g: &mut G2d)
     {
         self.snake.draw(con, g);
@@ -88,7 +88,7 @@ impl Game
             draw_rectangle(GAME_OVER_COLOR, 0, 0, self.width, self.height, con, g);
         }
     }
-    
+
     pub fn update(&mut self, delta_time: f64)
     {
         self.waiting_time += delta_time;
@@ -97,7 +97,7 @@ impl Game
         {
             if self.waiting_time > RESTART_TIME
             {
-                self.restart();
+                self.restart();                
             }
             return;
         }
@@ -119,6 +119,7 @@ impl Game
         if self.food_exists && self.food_x == head_x && self.food_y == head_y
         {
             self.food_exists = false;
+            println!("Eat!");
             self.snake.restore_tail();
         }
     }
@@ -141,6 +142,7 @@ impl Game
 
         let mut new_x = rng.gen_range(1, self.width - 1);
         let mut new_y = rng.gen_range(1, self.height - 1);
+
         while self.snake.overlap_tail(new_x, new_y)
         {
             new_x = rng.gen_range(1, self.width - 1);
@@ -152,14 +154,15 @@ impl Game
         self.food_exists = true;
     }
 
-    fn update_snake(&mut self, dir: Option<Direction>) {
-        if self.check_if_snake_alive(dir) 
+    fn update_snake(&mut self, dir: Option<Direction>)
+    {
+        if self.check_if_snake_alive(dir)
         {
             self.snake.move_forward(dir);
-            println!("snake:{:?} :: fruit: ({}:{})", self.snake.head_position(), self.food_x, self.food_y);
+            println!("snake{:?} :: fruit:({}:{})", self.snake.head_position(), self.food_x, self.food_y);
             self.check_eating();
         }
-        else 
+        else
         {
             self.game_over = true;
             println!("Game Over");
@@ -170,11 +173,11 @@ impl Game
     fn restart(&mut self)
     {
         self.snake = Snake::new(2, 2);
-        self.waiting_time = 0.0;
         self.food_exists = true;
         self.food_x = 6;
         self.food_y = 4;
         self.game_over = false;
-        println!("Restart");
+        self.waiting_time = 0.0;
+        println!("Restarted");
     }
 }
